@@ -5,77 +5,241 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paynote Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body class="bg-zinc-950 text-white flex items-center justify-center min-h-screen">
-    <div class="w-full max-w-sm px-6">
-        <div class="text-center mb-10">
-            <div class="mx-auto w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6">
-                <i class="fa-solid fa-shield-halved text-white text-3xl"></i>
+<body class="bg-zinc-950 text-white">
+    
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center px-6">
+        <div class="w-full max-w-sm">
+            <div class="text-center mb-10">
+                <div class="mx-auto w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-shield-halved text-white text-3xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold">Admin Login</h1>
             </div>
-            <h1 class="text-3xl font-bold tracking-tight">Admin Login</h1>
-            <p class="text-zinc-400 mt-2">Paynote Control Panel</p>
+
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm text-zinc-400 mb-2">Email</label>
+                    <input type="email" id="email" class="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-lg" placeholder="admin@paynote.com" required>
+                </div>
+                <div>
+                    <label class="block text-sm text-zinc-400 mb-2">Password</label>
+                    <input type="password" id="password" class="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-lg" placeholder="••••••••" required>
+                </div>
+                <div id="error" class="text-red-400 text-sm hidden"></div>
+                <button type="submit" class="w-full bg-emerald-500 py-4 rounded-2xl font-semibold text-lg">Sign In</button>
+            </form>
         </div>
+    </div>
 
-        <form id="loginForm" class="space-y-6">
-            <div>
-                <label class="block text-sm text-zinc-400 mb-2">Email</label>
-                <input type="email" id="email" 
-                       class="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:border-emerald-500" 
-                       placeholder="admin@paynote.com" required>
+    <!-- Dashboard Screen -->
+    <div id="dashboardScreen" class="hidden">
+        <div class="max-w-5xl mx-auto px-6 py-8">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold">Dashboard</h1>
+                    <p class="text-zinc-400">Welcome back, Admin</p>
+                </div>
+                <button onclick="logout()" class="px-5 py-2 bg-red-500/20 text-red-400 rounded-2xl text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-sign-out-alt"></i> Logout
+                </button>
             </div>
-            
-            <div>
-                <label class="block text-sm text-zinc-400 mb-2">Password</label>
-                <input type="password" id="password" 
-                       class="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:border-emerald-500" 
-                       placeholder="••••••••" required>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="bg-zinc-900 rounded-3xl p-6">
+                    <div class="text-zinc-400 text-sm">Total Users</div>
+                    <div id="totalUsers" class="text-4xl font-bold mt-2">—</div>
+                </div>
+                <div class="bg-zinc-900 rounded-3xl p-6">
+                    <div class="text-zinc-400 text-sm">Total Invoices</div>
+                    <div id="totalInvoices" class="text-4xl font-bold mt-2">—</div>
+                </div>
             </div>
 
-            <div id="error" class="text-red-400 text-sm hidden"></div>
+            <!-- Tabs -->
+            <div class="flex gap-2 mb-6">
+                <button onclick="switchTab(0)" class="tab-btn px-6 py-2 bg-emerald-500 text-white rounded-2xl text-sm font-medium">Users</button>
+                <button onclick="switchTab(1)" class="tab-btn px-6 py-2 bg-zinc-800 text-white rounded-2xl text-sm font-medium">Invoices</button>
+                <button onclick="switchTab(2)" class="tab-btn px-6 py-2 bg-zinc-800 text-white rounded-2xl text-sm font-medium">Logs</button>
+            </div>
 
-            <button type="submit" 
-                    class="w-full bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 py-4 rounded-2xl font-semibold text-lg transition-colors">
-                Sign In
-            </button>
-        </form>
+            <div id="tabContent"></div>
+        </div>
     </div>
 
     <script>
-        const form = document.getElementById('loginForm');
-        const errorDiv = document.getElementById('error');
+        let token = localStorage.getItem('adminToken') || '';
 
-        form.addEventListener('submit', async function(e) {
+        // Auto login if token exists
+        if (token) {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('dashboardScreen').classList.remove('hidden');
+            loadDashboard();
+        }
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            
-            errorDiv.classList.add('hidden');
+            const errorDiv = document.getElementById('error');
 
             try {
-                const response = await fetch('https://paynote2.onrender.com/admin/login', {
+                const res = await fetch('https://paynote2.onrender.com/admin/login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
+                const data = await res.json();
 
-                const data = await response.json();
-
-                if (response.ok && data.token) {
-                    localStorage.setItem('adminToken', data.token);
-                    alert('Login successful! Redirecting...');
-                    window.location.href = 'dashboard.html'; // or just reload
+                if (res.ok && data.token) {
+                    token = data.token;
+                    localStorage.setItem('adminToken', token);
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('dashboardScreen').classList.remove('hidden');
+                    loadDashboard();
                 } else {
-                    errorDiv.textContent = data.error || 'Invalid credentials';
+                    errorDiv.textContent = data.error || 'Login failed';
                     errorDiv.classList.remove('hidden');
                 }
-            } catch (error) {
-                errorDiv.textContent = 'Connection failed. Please try again.';
+            } catch (err) {
+                errorDiv.textContent = 'Connection failed';
                 errorDiv.classList.remove('hidden');
             }
         });
+
+        async function loadDashboard() {
+            try {
+                const res = await fetch('https://paynote2.onrender.com/admin/stats', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                document.getElementById('totalUsers').textContent = data.stats?.totalUsers || 0;
+                document.getElementById('totalInvoices').textContent = data.stats?.totalInvoices || 0;
+
+                switchTab(0); // Load Users by default
+            } catch (err) {
+                alert('Failed to load dashboard');
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('bg-emerald-500', i === tab);
+                btn.classList.toggle('bg-zinc-800', i !== tab);
+            });
+
+            const content = document.getElementById('tabContent');
+            content.innerHTML = `<div class="text-center py-8">Loading...</div>`;
+
+            if (tab === 0) loadUsers();
+            else if (tab === 1) loadInvoices();
+            else if (tab === 2) loadLogs();
+        }
+
+        async function loadUsers() {
+            const content = document.getElementById('tabContent');
+            try {
+                const res = await fetch('https://paynote2.onrender.com/admin/users', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const users = await res.json();
+
+                let html = `<div class="space-y-3">`;
+                users.forEach(user => {
+                    html += `
+                        <div class="bg-zinc-900 p-4 rounded-2xl flex justify-between items-center">
+                            <div>
+                                <div class="font-semibold">${user.name}</div>
+                                <div class="text-sm text-zinc-400">${user.email}</div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="deleteUser('${user.id}')" class="px-4 py-1.5 bg-red-500/20 text-red-400 text-sm rounded-xl">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                content.innerHTML = html;
+            } catch (err) {
+                content.innerHTML = `<div class="text-red-400">Failed to load users</div>`;
+            }
+        }
+
+        async function loadInvoices() {
+            const content = document.getElementById('tabContent');
+            try {
+                const res = await fetch('https://paynote2.onrender.com/admin/invoices', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const invoices = await res.json();
+
+                let html = `<div class="space-y-3">`;
+                invoices.forEach(inv => {
+                    html += `
+                        <div class="bg-zinc-900 p-4 rounded-2xl">
+                            <div class="flex justify-between">
+                                <div>${inv.customer_name}</div>
+                                <div class="font-bold">₦${inv.total_amount}</div>
+                            </div>
+                            <div class="flex justify-between mt-3">
+                                <span class="text-sm px-3 py-1 rounded-full ${inv.status === 'paid' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${inv.status}</span>
+                                <button onclick="markPaid('${inv.id}')" class="px-4 py-1.5 bg-emerald-500/20 text-emerald-400 text-sm rounded-xl">Mark Paid</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                content.innerHTML = html;
+            } catch (err) {
+                content.innerHTML = `<div class="text-red-400">Failed to load invoices</div>`;
+            }
+        }
+
+        async function loadLogs() {
+            const content = document.getElementById('tabContent');
+            try {
+                const res = await fetch('https://paynote2.onrender.com/admin/logs', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const logs = await res.json();
+
+                let html = `<div class="space-y-2">`;
+                logs.slice(0, 20).forEach(log => {
+                    html += `<div class="bg-zinc-900 p-3 rounded-2xl text-sm">${log.action} - ${new Date(log.timestamp).toLocaleString()}</div>`;
+                });
+                html += `</div>`;
+                content.innerHTML = html;
+            } catch (err) {
+                content.innerHTML = `<div class="text-red-400">Failed to load logs</div>`;
+            }
+        }
+
+        async function deleteUser(id) {
+            if (!confirm('Delete this user?')) return;
+            await fetch(`https://paynote2.onrender.com/admin/user/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            switchTab(0);
+        }
+
+        async function markPaid(id) {
+            await fetch(`https://paynote2.onrender.com/admin/invoice/${id}/mark-paid`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            switchTab(1);
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            location.reload();
+        }
     </script>
 </body>
 </html>
