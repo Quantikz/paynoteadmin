@@ -3,166 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paynote • Admin</title>
+    <title>Paynote • Absolute Control</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap');
         body { font-family: 'Inter', system-ui, sans-serif; }
-        .glass { background: rgba(18, 18, 26, 0.85); backdrop-filter: blur(20px); }
-        .nav-active { background: #10b981; color: white; }
-        .stat-card { transition: transform 0.2s ease; }
-        .stat-card:hover { transform: translateY(-4px); }
-        .table-row:hover { background: #1f1f2e; }
+        .glass { background: rgba(18,18,26,0.95); backdrop-filter: blur(24px); }
+        .nav-active { background: #10b981; color: white !important; }
+        .stat-card { transition: all 0.3s ease; }
+        .control-btn { transition: all 0.2s ease; }
+        .danger-btn:hover { background: #ef4444; color: white; }
     </style>
 </head>
 <body class="bg-[#0a0a0f] text-white">
-    <!-- Header -->
-    <div class="sticky top-0 z-50 bg-[#0a0a0f]/95 backdrop-blur-lg border-b border-white/10">
+    <!-- Top Bar -->
+    <div class="sticky top-0 z-50 bg-[#0a0a0f]/95 border-b border-white/10">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-emerald-500 rounded-2xl flex items-center justify-center">
-                    <i class="fa-solid fa-shield-halved text-white text-xl"></i>
+                <div class="w-10 h-10 bg-red-500 rounded-2xl flex items-center justify-center">
+                    <i class="fa-solid fa-skull text-white text-2xl"></i>
                 </div>
                 <div>
-                    <span class="font-semibold text-2xl tracking-tighter">paynote</span>
-                    <span class="text-emerald-400 text-sm font-medium ml-1">Admin</span>
+                    <span class="font-bold text-3xl tracking-tighter">paynote</span>
+                    <span class="text-red-400 font-bold ml-1">ABSOLUTE</span>
                 </div>
             </div>
-            
-            <div id="userInfo" class="hidden items-center gap-3">
-                <div class="text-right">
-                    <div id="adminEmail" class="text-sm font-medium"></div>
-                    <div class="text-[10px] text-emerald-400">ADMIN</div>
+            <div id="adminHeader" class="hidden flex items-center gap-4">
+                <div class="px-4 py-1.5 bg-red-500/10 text-red-400 rounded-2xl text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span id="adminEmailHeader"></span>
                 </div>
-                <button onclick="logout()" 
-                        class="px-4 py-1.5 text-sm bg-white/10 hover:bg-white/20 rounded-2xl transition-colors flex items-center gap-2">
-                    <i class="fa-solid fa-sign-out-alt"></i>
-                    <span>Logout</span>
+                <button onclick="logout()" class="px-5 py-2 bg-white/10 hover:bg-red-500/30 rounded-2xl text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-sign-out-alt"></i> Logout
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Login Screen -->
-    <div id="loginScreen" class="max-w-md mx-auto px-6 pt-16">
+    <!-- Login -->
+    <div id="loginScreen" class="max-w-md mx-auto px-6 pt-20">
         <div class="text-center mb-10">
-            <div class="mx-auto w-20 h-20 bg-emerald-500/10 rounded-3xl flex items-center justify-center mb-6">
-                <i class="fa-solid fa-lock text-emerald-400 text-5xl"></i>
+            <div class="mx-auto w-24 h-24 bg-red-500 rounded-3xl flex items-center justify-center mb-6">
+                <i class="fa-solid fa-skull text-white text-5xl"></i>
             </div>
-            <h1 class="text-4xl font-semibold tracking-tighter">Admin Access</h1>
-            <p class="text-zinc-400 mt-2">Secure dashboard for Paynote</p>
+            <h1 class="text-5xl font-bold tracking-tighter">Absolute Control</h1>
+            <p class="text-zinc-400 mt-2">You now own the entire system</p>
         </div>
 
         <div class="glass border border-white/10 rounded-3xl p-8">
             <form id="adminLoginForm">
                 <div class="space-y-5">
-                    <div>
-                        <label class="block text-sm font-medium text-zinc-300 mb-2">Admin Email</label>
-                        <input type="email" id="adminEmailInput" 
-                               class="w-full bg-zinc-900 border border-white/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-emerald-500 text-lg"
-                               placeholder="admin@paynote.com" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-zinc-300 mb-2">Password</label>
-                        <input type="password" id="adminPasswordInput" 
-                               class="w-full bg-zinc-900 border border-white/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-emerald-500 text-lg"
-                               placeholder="••••••••" required>
-                    </div>
+                    <input type="email" id="adminEmailInput" class="w-full bg-zinc-900 border border-white/20 rounded-2xl px-5 py-4 text-lg" placeholder="Admin Email" required>
+                    <input type="password" id="adminPasswordInput" class="w-full bg-zinc-900 border border-white/20 rounded-2xl px-5 py-4 text-lg" placeholder="Password" required>
                 </div>
-
                 <div id="loginError" class="text-red-400 text-sm mt-4 hidden"></div>
-
-                <button type="submit" id="loginBtn"
-                        class="mt-6 w-full bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 transition-all py-4 rounded-2xl font-semibold flex items-center justify-center gap-3 text-lg">
-                    <span id="loginBtnText">Sign in to Admin</span>
+                <button type="submit" class="mt-6 w-full bg-red-500 hover:bg-red-600 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3">
+                    TAKE FULL CONTROL
                 </button>
             </form>
         </div>
-        
-        <p class="text-center text-xs text-zinc-500 mt-8">Connected to paynote2.onrender.com</p>
     </div>
 
-    <!-- Admin Dashboard -->
-    <div id="dashboardScreen" class="hidden max-w-7xl mx-auto px-6 pb-20">
-        <!-- Stats Overview -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            <div class="stat-card glass border border-white/10 rounded-3xl p-5">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-zinc-400 text-sm">Total Users</p>
-                        <p id="totalUsers" class="text-4xl font-semibold mt-1">—</p>
-                    </div>
-                    <i class="fa-solid fa-users text-3xl text-emerald-400"></i>
-                </div>
-            </div>
-            
-            <div class="stat-card glass border border-white/10 rounded-3xl p-5">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-zinc-400 text-sm">Total Invoices</p>
-                        <p id="totalInvoices" class="text-4xl font-semibold mt-1">—</p>
-                    </div>
-                    <i class="fa-solid fa-file-invoice text-3xl text-emerald-400"></i>
-                </div>
-            </div>
-            
-            <div class="stat-card glass border border-white/10 rounded-3xl p-5">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-zinc-400 text-sm">Total Revenue</p>
-                        <p id="totalRevenue" class="text-4xl font-semibold mt-1">—</p>
-                    </div>
-                    <i class="fa-solid fa-naira-sign text-3xl text-emerald-400"></i>
-                </div>
-            </div>
-            
-            <div class="stat-card glass border border-white/10 rounded-3xl p-5">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-zinc-400 text-sm">Active Today</p>
-                        <p id="activeToday" class="text-4xl font-semibold mt-1">—</p>
-                    </div>
-                    <i class="fa-solid fa-chart-line text-3xl text-emerald-400"></i>
-                </div>
-            </div>
+    <!-- Dashboard -->
+    <div id="dashboardScreen" class="hidden max-w-7xl mx-auto px-6 pb-12">
+        <!-- Quick Actions -->
+        <div class="flex flex-wrap gap-3 mt-6">
+            <button onclick="refreshAll()" class="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-2xl flex items-center gap-2 text-sm font-medium">
+                <i class="fa-solid fa-sync-alt"></i> Refresh Everything
+            </button>
+            <button onclick="exportAllData()" class="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-2xl flex items-center gap-2 text-sm font-medium">
+                <i class="fa-solid fa-download"></i> Export All Data (CSV)
+            </button>
         </div>
+
+        <!-- Stats -->
+        <div id="statsGrid" class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
 
         <!-- Tabs -->
-        <div class="flex gap-2 mt-8 border-b border-white/10 pb-1">
-            <button onclick="switchTab(0)" class="tab-btn px-6 py-2 rounded-2xl text-sm font-medium nav-active" data-tab="0">Overview</button>
-            <button onclick="switchTab(1)" class="tab-btn px-6 py-2 rounded-2xl text-sm font-medium text-zinc-400 hover:text-white" data-tab="1">Users</button>
-            <button onclick="switchTab(2)" class="tab-btn px-6 py-2 rounded-2xl text-sm font-medium text-zinc-400 hover:text-white" data-tab="2">Invoices</button>
-            <button onclick="switchTab(3)" class="tab-btn px-6 py-2 rounded-2xl text-sm font-medium text-zinc-400 hover:text-white" data-tab="3">Logs</button>
+        <div class="mt-8 flex gap-2 border-b border-white/10 pb-2 overflow-x-auto">
+            <button onclick="switchTab(0)" class="tab-btn px-8 py-3 rounded-2xl text-sm font-semibold nav-active" data-tab="0">Overview</button>
+            <button onclick="switchTab(1)" class="tab-btn px-8 py-3 rounded-2xl text-sm font-semibold text-zinc-400" data-tab="1">Users</button>
+            <button onclick="switchTab(2)" class="tab-btn px-8 py-3 rounded-2xl text-sm font-semibold text-zinc-400" data-tab="2">Invoices</button>
+            <button onclick="switchTab(3)" class="tab-btn px-8 py-3 rounded-2xl text-sm font-semibold text-zinc-400" data-tab="3">Activity Logs</button>
         </div>
 
-        <!-- Tab Content -->
-        <div id="tabContent" class="mt-6">
-            <!-- Content will be injected here by JavaScript -->
-        </div>
+        <div id="tabContent" class="mt-6"></div>
     </div>
 
     <script>
         let adminToken = localStorage.getItem('adminToken') || '';
-        let currentTab = 0;
 
-        // Tailwind script
-        function initTailwind() {
-            document.documentElement.style.setProperty('--accent', '#10b981');
+        function init() {
+            document.getElementById('adminLoginForm').addEventListener('submit', handleLogin);
+            if (adminToken) showDashboard();
         }
 
-        // Login
-        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+        async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('adminEmailInput').value;
             const password = document.getElementById('adminPasswordInput').value;
-            const btn = document.getElementById('loginBtn');
-            const btnText = document.getElementById('loginBtnText');
             const errorDiv = document.getElementById('loginError');
-
-            btn.disabled = true;
-            btnText.innerHTML = 'Signing in...';
-            errorDiv.classList.add('hidden');
 
             try {
                 const res = await fetch('https://paynote2.onrender.com/admin/login', {
@@ -170,7 +110,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-
                 const data = await res.json();
 
                 if (res.ok && data.token) {
@@ -178,25 +117,22 @@
                     localStorage.setItem('adminToken', adminToken);
                     showDashboard(data.user);
                 } else {
-                    errorDiv.textContent = data.error || 'Invalid credentials';
+                    errorDiv.textContent = data.error || 'Access Denied';
                     errorDiv.classList.remove('hidden');
                 }
             } catch (err) {
-                errorDiv.textContent = 'Connection failed. Backend might be sleeping.';
+                errorDiv.textContent = 'Connection failed';
                 errorDiv.classList.remove('hidden');
-            } finally {
-                btn.disabled = false;
-                btnText.innerHTML = 'Sign in to Admin';
             }
-        });
+        }
 
         function showDashboard(user) {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('dashboardScreen').classList.remove('hidden');
-            document.getElementById('userInfo').classList.remove('hidden');
-            document.getElementById('adminEmail').textContent = user.email;
-
-            loadDashboardData();
+            document.getElementById('adminHeader').classList.remove('hidden');
+            document.getElementById('adminEmailHeader').textContent = user.email || 'GOD MODE';
+            loadStats();
+            switchTab(0);
         }
 
         function logout() {
@@ -204,60 +140,57 @@
             location.reload();
         }
 
-        async function loadDashboardData() {
-            if (!adminToken) return;
-
+        async function loadStats() {
             try {
-                // Load Stats
-                const statsRes = await fetch('https://paynote2.onrender.com/admin/stats', {
+                const res = await fetch('https://paynote2.onrender.com/admin/stats', {
                     headers: { 'Authorization': `Bearer ${adminToken}` }
                 });
-                const stats = await statsRes.json();
-
-                if (statsRes.ok) {
-                    document.getElementById('totalUsers').textContent = stats.totalUsers || '0';
-                    document.getElementById('totalInvoices').textContent = stats.totalInvoices || '0';
-                    document.getElementById('totalRevenue').textContent = '₦' + (stats.totalRevenue || 0).toLocaleString();
-                    document.getElementById('activeToday').textContent = stats.activeToday || '0';
-                }
-
-                // Load default tab (Overview)
-                switchTab(0);
-            } catch (err) {
-                console.error('Failed to load dashboard data', err);
-            }
+                const data = await res.json();
+                renderStats(data.stats || {});
+            } catch (err) {}
         }
 
-        function switchTab(tabIndex) {
-            currentTab = tabIndex;
-            
-            // Update active tab style
+        function renderStats(stats) {
+            const container = document.getElementById('statsGrid');
+            container.innerHTML = `
+                <div class="stat-card glass border border-white/10 rounded-3xl p-6">
+                    <div class="flex justify-between"><div><p class="text-sm text-zinc-400">Total Users</p><p class="text-5xl font-bold">${stats.totalUsers || 0}</p></div><i class="fa-solid fa-users text-4xl text-red-400"></i></div>
+                </div>
+                <div class="stat-card glass border border-white/10 rounded-3xl p-6">
+                    <div class="flex justify-between"><div><p class="text-sm text-zinc-400">Total Invoices</p><p class="text-5xl font-bold">${stats.totalInvoices || 0}</p></div><i class="fa-solid fa-file-invoice text-4xl text-red-400"></i></div>
+                </div>
+                <div class="stat-card glass border border-white/10 rounded-3xl p-6">
+                    <div class="flex justify-between"><div><p class="text-sm text-zinc-400">Revenue</p><p class="text-5xl font-bold">₦${(stats.totalRevenue || 0).toLocaleString()}</p></div><i class="fa-solid fa-naira-sign text-4xl text-red-400"></i></div>
+                </div>
+                <div class="stat-card glass border border-white/10 rounded-3xl p-6">
+                    <div class="flex justify-between"><div><p class="text-sm text-zinc-400">Unpaid</p><p class="text-5xl font-bold">₦${(stats.unpaidRevenue || 0).toLocaleString()}</p></div><i class="fa-solid fa-exclamation-triangle text-4xl text-amber-400"></i></div>
+                </div>
+            `;
+        }
+
+        function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach((btn, i) => {
-                if (parseInt(btn.dataset.tab) === tabIndex) {
-                    btn.classList.add('nav-active', 'text-white');
-                    btn.classList.remove('text-zinc-400');
-                } else {
-                    btn.classList.remove('nav-active', 'text-white');
-                    btn.classList.add('text-zinc-400');
-                }
+                btn.classList.toggle('nav-active', i === tab);
+                btn.classList.toggle('text-white', i === tab);
+                btn.classList.toggle('text-zinc-400', i !== tab);
             });
 
             const content = document.getElementById('tabContent');
-            content.innerHTML = '<div class="text-center py-12"><i class="fa-solid fa-spinner fa-spin text-2xl text-emerald-400"></i></div>';
+            content.innerHTML = `<div class="text-center py-12"><i class="fa-solid fa-spinner fa-spin text-3xl text-red-400"></i></div>`;
 
-            if (tabIndex === 0) loadOverview();
-            else if (tabIndex === 1) loadUsers();
-            else if (tabIndex === 2) loadInvoices();
-            else if (tabIndex === 3) loadLogs();
+            if (tab === 0) loadOverview();
+            else if (tab === 1) loadUsers();
+            else if (tab === 2) loadInvoices();
+            else if (tab === 3) loadLogs();
         }
 
         async function loadOverview() {
             const content = document.getElementById('tabContent');
             content.innerHTML = `
                 <div class="glass border border-white/10 rounded-3xl p-8 text-center">
-                    <i class="fa-solid fa-chart-pie text-6xl text-emerald-400 mb-4"></i>
-                    <h3 class="text-2xl font-semibold">Welcome to Paynote Admin</h3>
-                    <p class="text-zinc-400 mt-2 max-w-md mx-auto">Use the tabs above to manage users, view all invoices, and monitor activity logs.</p>
+                    <i class="fa-solid fa-skull text-6xl text-red-500 mb-4"></i>
+                    <h2 class="text-3xl font-bold">You Have Absolute Control</h2>
+                    <p class="text-zinc-400 mt-2">Use the tabs above to manage users, invoices, and the entire system.</p>
                 </div>
             `;
         }
@@ -270,28 +203,33 @@
                 });
                 const users = await res.json();
 
-                let html = `<div class="glass border border-white/10 rounded-3xl overflow-hidden">`;
-                html += `<div class="px-6 py-4 border-b border-white/10 flex justify-between items-center"><span class="font-semibold">All Users (${users.length})</span></div>`;
-                
-                html += `<div class="divide-y divide-white/10">`;
+                let html = `<div class="glass border border-white/10 rounded-3xl overflow-hidden">
+                    <div class="px-6 py-5 border-b border-white/10 flex justify-between"><span class="font-bold text-xl">All Users (${users.length})</span></div>
+                    <div class="max-h-[550px] overflow-auto">`;
+
                 users.forEach(user => {
                     html += `
-                        <div class="px-6 py-4 flex justify-between items-center table-row">
+                        <div class="px-6 py-4 border-b border-white/10 flex justify-between items-center hover:bg-white/5 group">
                             <div>
-                                <div class="font-medium">${user.name}</div>
+                                <div class="font-semibold">${user.name}</div>
                                 <div class="text-sm text-zinc-400">${user.email}</div>
                             </div>
-                            <div class="text-right text-sm">
-                                <div class="text-emerald-400">${user.billing_status}</div>
-                                <div class="text-xs text-zinc-500">${new Date(user.createdAt).toLocaleDateString()}</div>
+                            <div class="flex items-center gap-3">
+                                <span class="px-3 py-1 text-xs rounded-full ${user.billing_status === 'paid' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${user.billing_status}</span>
+                                
+                                <div class="opacity-0 group-hover:opacity-100 flex gap-2">
+                                    <button onclick="updateUserStatus('${user.id}', 'paid')" class="px-3 py-1 text-xs bg-emerald-500/20 text-emerald-400 rounded-xl hover:bg-emerald-500 hover:text-white">Mark Paid</button>
+                                    <button onclick="deleteUser('${user.id}', '${user.name}')" class="px-3 py-1 text-xs bg-red-500/20 text-red-400 rounded-xl hover:bg-red-500 hover:text-white">Delete</button>
+                                </div>
                             </div>
                         </div>
                     `;
                 });
+
                 html += `</div></div>`;
                 content.innerHTML = html;
             } catch (err) {
-                content.innerHTML = `<div class="text-red-400 p-6">Failed to load users</div>`;
+                content.innerHTML = `<div class="text-red-400 p-8">Failed to load users</div>`;
             }
         }
 
@@ -303,32 +241,33 @@
                 });
                 const invoices = await res.json();
 
-                let html = `<div class="glass border border-white/10 rounded-3xl overflow-hidden">`;
-                html += `<div class="px-6 py-4 border-b border-white/10"><span class="font-semibold">All Invoices (${invoices.length})</span></div>`;
-                
-                html += `<div class="divide-y divide-white/10 text-sm">`;
-                invoices.slice(0, 20).forEach(inv => {
+                let html = `<div class="glass border border-white/10 rounded-3xl overflow-hidden">
+                    <div class="px-6 py-5 border-b border-white/10"><span class="font-bold text-xl">All Invoices (${invoices.length})</span></div>
+                    <div class="max-h-[550px] overflow-auto">`;
+
+                invoices.forEach(inv => {
                     html += `
-                        <div class="px-6 py-4 grid grid-cols-3 gap-4 items-center table-row">
-                            <div>
-                                <div class="font-medium">${inv.customer_name}</div>
-                                <div class="text-xs text-zinc-500">${inv.customer_email}</div>
+                        <div class="px-6 py-4 border-b border-white/10 grid grid-cols-12 gap-4 items-center hover:bg-white/5 group">
+                            <div class="col-span-5">
+                                <div class="font-semibold">${inv.customer_name}</div>
+                                <div class="text-xs text-zinc-400">${inv.customer_email}</div>
                             </div>
-                            <div class="text-right">
-                                <div class="font-semibold">₦${inv.total_amount}</div>
+                            <div class="col-span-3 text-right font-bold">₦${inv.total_amount}</div>
+                            <div class="col-span-2 text-center">
+                                <span class="px-4 py-1 text-xs rounded-full ${inv.status === 'paid' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${inv.status}</span>
                             </div>
-                            <div class="text-right">
-                                <span class="px-3 py-1 text-xs rounded-full ${inv.status === 'paid' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">
-                                    ${inv.status}
-                                </span>
+                            <div class="col-span-2 flex gap-2 justify-end opacity-0 group-hover:opacity-100">
+                                <button onclick="markInvoicePaid('${inv.id}')" class="px-3 py-1 text-xs bg-emerald-500/20 text-emerald-400 rounded-xl">Mark Paid</button>
+                                <button onclick="deleteInvoice('${inv.id}')" class="px-3 py-1 text-xs bg-red-500/20 text-red-400 rounded-xl">Delete</button>
                             </div>
                         </div>
                     `;
                 });
+
                 html += `</div></div>`;
                 content.innerHTML = html;
             } catch (err) {
-                content.innerHTML = `<div class="text-red-400 p-6">Failed to load invoices</div>`;
+                content.innerHTML = `<div class="text-red-400 p-8">Failed to load invoices</div>`;
             }
         }
 
@@ -340,44 +279,137 @@
                 });
                 const logs = await res.json();
 
-                let html = `<div class="glass border border-white/10 rounded-3xl overflow-hidden text-sm">`;
-                html += `<div class="px-6 py-4 border-b border-white/10"><span class="font-semibold">Recent Activity</span></div>`;
-                
-                html += `<div class="divide-y divide-white/10 max-h-[500px] overflow-auto">`;
-                logs.slice(0, 30).forEach(log => {
+                let html = `<div class="glass border border-white/10 rounded-3xl overflow-hidden">
+                    <div class="px-6 py-5 border-b border-white/10"><span class="font-bold text-xl">Activity Logs</span></div>
+                    <div class="max-h-[550px] overflow-auto text-sm">`;
+
+                logs.slice(0, 60).forEach(log => {
                     html += `
-                        <div class="px-6 py-3 flex gap-4 text-xs table-row">
-                            <div class="w-24 text-emerald-400 font-mono">${new Date(log.timestamp).toLocaleTimeString()}</div>
-                            <div class="flex-1 font-medium">${log.action}</div>
-                            <div class="text-zinc-400">${log.email || ''}</div>
+                        <div class="px-6 py-3 border-b border-white/10 grid grid-cols-12 gap-3 hover:bg-white/5 text-xs">
+                            <div class="col-span-3 text-red-400 font-mono">${new Date(log.timestamp).toLocaleString()}</div>
+                            <div class="col-span-6">${log.action}</div>
+                            <div class="col-span-3 text-right text-zinc-400">${log.email || ''}</div>
                         </div>
                     `;
                 });
+
                 html += `</div></div>`;
                 content.innerHTML = html;
             } catch (err) {
-                content.innerHTML = `<div class="text-red-400 p-6">Failed to load logs</div>`;
+                content.innerHTML = `<div class="text-red-400 p-8">Failed to load logs</div>`;
             }
         }
 
-        // Auto-login if token exists
-        function checkAutoLogin() {
-            if (adminToken) {
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('dashboardScreen').classList.remove('hidden');
-                document.getElementById('userInfo').classList.remove('hidden');
-                document.getElementById('adminEmail').textContent = 'Admin';
-                loadDashboardData();
+        // ==================== ABSOLUTE CONTROL FUNCTIONS ====================
+
+        async function deleteUser(id, name) {
+            if (!confirm(`Delete user "${name}" permanently? This cannot be undone!`)) return;
+
+            try {
+                const res = await fetch(`https://paynote2.onrender.com/admin/user/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+
+                if (res.ok) {
+                    alert('User deleted successfully');
+                    loadUsers();
+                    loadStats();
+                } else {
+                    alert('Failed to delete user. Backend may need update.');
+                }
+            } catch (err) {
+                alert('Error deleting user');
             }
         }
 
-        // Initialize
-        function init() {
-            initTailwind();
-            checkAutoLogin();
-            
-            // Wake up backend
-            fetch('https://paynote2.onrender.com').catch(() => {});
+        async function updateUserStatus(id, status) {
+            try {
+                const res = await fetch(`https://paynote2.onrender.com/admin/user/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Authorization': `Bearer ${adminToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status })
+                });
+
+                if (res.ok) {
+                    alert(`User status updated to ${status}`);
+                    loadUsers();
+                } else {
+                    alert('Failed to update status');
+                }
+            } catch (err) {
+                alert('Error updating user');
+            }
+        }
+
+        async function markInvoicePaid(id) {
+            try {
+                const res = await fetch(`https://paynote2.onrender.com/admin/invoice/${id}/mark-paid`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+
+                if (res.ok) {
+                    alert('Invoice marked as paid');
+                    loadInvoices();
+                    loadStats();
+                } else {
+                    alert('Failed to mark as paid');
+                }
+            } catch (err) {
+                alert('Error');
+            }
+        }
+
+        async function deleteInvoice(id) {
+            if (!confirm('Delete this invoice permanently?')) return;
+
+            try {
+                const res = await fetch(`https://paynote2.onrender.com/admin/invoice/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+
+                if (res.ok) {
+                    alert('Invoice deleted');
+                    loadInvoices();
+                    loadStats();
+                } else {
+                    alert('Failed to delete invoice');
+                }
+            } catch (err) {
+                alert('Error deleting invoice');
+            }
+        }
+
+        function refreshAll() {
+            loadStats();
+            switchTab(currentTab);
+        }
+
+        function exportAllData() {
+            alert('Exporting all data as CSV...');
+            // Can be expanded later
+        }
+
+        function switchTab(tab) {
+            // Same as before
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('nav-active', i === tab);
+                btn.classList.toggle('text-white', i === tab);
+                btn.classList.toggle('text-zinc-400', i !== tab);
+            });
+
+            const content = document.getElementById('tabContent');
+            content.innerHTML = `<div class="text-center py-12"><i class="fa-solid fa-spinner fa-spin text-3xl text-red-400"></i></div>`;
+
+            if (tab === 0) loadOverview();
+            else if (tab === 1) loadUsers();
+            else if (tab === 2) loadInvoices();
+            else if (tab === 3) loadLogs();
         }
 
         window.onload = init;
