@@ -3,10 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ef4444">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Skull Command">
+    
     <title>Paynote • Skull Command</title>
+    
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiU2t1bGwgQ29tbWFuZCIsInNob3J0X25hbWUiOiJTa3VsbCBDb21tYW5kIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwYTBhMGEiLCJ0aGVtZV9jb2xvciI6IiNlZjQ0NDQiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvNTk2OC81OTY4ODg1LnBuZyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifV19">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
         body { font-family: 'Inter', system-ui, sans-serif; }
         .danger-card { background: #111113; border: 1px solid #3f1f1f; }
@@ -18,7 +27,7 @@
 </head>
 <body class="bg-[#0a0a0a] text-white skull-pattern">
     
-    <!-- Login -->
+    <!-- Login Screen -->
     <div id="loginScreen" class="min-h-screen flex items-center justify-center px-6">
         <div class="w-full max-w-sm">
             <div class="text-center mb-10">
@@ -46,11 +55,10 @@
         </div>
     </div>
 
-    <!-- Main Dashboard -->
+    <!-- Dashboard -->
     <div id="dashboardScreen" class="hidden">
         <div class="max-w-5xl mx-auto px-5 pb-20">
             
-            <!-- Header -->
             <div class="flex justify-between items-center pt-6 pb-8">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-[#ef4444] rounded-2xl flex items-center justify-center">
@@ -124,11 +132,25 @@
             </button>
             <h2 class="text-2xl font-bold">User Details</h2>
         </div>
-        
         <div id="userDetailContent"></div>
     </div>
 
     <script>
+        // ==================== PWA SERVICE WORKER ====================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // You can show a custom install button if you want
+        });
+
         let token = localStorage.getItem('adminToken') || '';
         let allUsers = [];
         let revenueChartInstance = null;
@@ -181,25 +203,20 @@
                 document.getElementById('totalUsers').textContent = data.stats?.totalUsers || 0;
                 document.getElementById('totalInvoices').textContent = data.stats?.totalInvoices || 0;
 
-                // Load users
                 const usersRes = await fetch('https://paynote2.onrender.com/admin/users', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 allUsers = await usersRes.json();
 
-                // Render Revenue Chart
                 renderRevenueChart(data);
-
                 switchTab(0);
                 
-                // Search
                 document.getElementById('searchInput').addEventListener('input', filterUsers);
             } catch (err) {}
         }
 
         function renderRevenueChart(data) {
             const ctx = document.getElementById('revenueChart');
-            
             if (revenueChartInstance) revenueChartInstance.destroy();
 
             const labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
@@ -352,7 +369,6 @@
 
             const content = document.getElementById('userDetailContent');
             
-            // Get user's invoices
             let userInvoices = [];
             try {
                 const res = await fetch('https://paynote2.onrender.com/admin/invoices', {
@@ -375,7 +391,6 @@
                     </div>
                 </div>
 
-                <!-- Controls -->
                 <div class="danger-card rounded-3xl p-6 mb-6">
                     <h4 class="font-bold mb-4">CONTROLS</h4>
                     <div class="flex flex-wrap gap-3">
@@ -387,7 +402,6 @@
                     </div>
                 </div>
 
-                <!-- User Invoices -->
                 <div class="danger-card rounded-3xl p-6 mb-6">
                     <h4 class="font-bold mb-4">INVOICES (${userInvoices.length})</h4>
                     ${userInvoices.length > 0 ? userInvoices.map(inv => `
@@ -401,14 +415,12 @@
                     `).join('') : '<p class="text-zinc-400">No invoices found</p>'}
                 </div>
 
-                <!-- Activity -->
                 <div class="danger-card rounded-3xl p-6">
                     <h4 class="font-bold mb-4">ACTIVITY HISTORY</h4>
                     <div id="userActivity" class="text-sm text-zinc-400">Loading activities...</div>
                 </div>
             `;
 
-            // Load user activity
             loadUserActivity(user.email);
         }
 
@@ -418,7 +430,6 @@
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const logs = await res.json();
-                
                 const userLogs = logs.filter(log => log.email === userEmail);
                 const container = document.getElementById('userActivity');
                 
@@ -455,7 +466,6 @@
 
                 if (res.ok) {
                     alert(`Tier changed to ${tier}`);
-                    // Refresh current view
                     showUserDetail(userId);
                 } else {
                     alert('Failed to update tier');
