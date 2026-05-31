@@ -3,77 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paynote Admin</title>
+    <title>Paynote • Skull Control</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap');
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        .danger-red {
+            color: #ef4444;
+        }
+        
+        .skull-bg {
+            background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+        }
+        
+        .danger-card {
+            background: #111113;
+            border: 1px solid #3f1f1f;
+            transition: all 0.3s ease;
+        }
+        
+        .danger-card:hover {
+            border-color: #ef4444;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
+        }
+        
+        .skull-icon {
+            filter: drop-shadow(0 0 8px #ef4444);
+        }
+        
+        .section-header {
+            font-size: clamp(1.1rem, 4vw, 1.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
+        .data-text {
+            font-size: clamp(0.875rem, 3.5vw, 1rem);
+            line-height: 1.3;
+            word-break: break-word;
+        }
+        
+        .danger-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .danger-btn:hover {
+            background: #ef4444;
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        .nav-tab {
+            transition: all 0.2s ease;
+        }
+        
+        .nav-tab.active {
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+        }
+        
+        .stat-value {
+            font-size: clamp(2rem, 7vw, 3rem);
+            font-weight: 800;
+            line-height: 1;
+        }
+    </style>
 </head>
-<body class="bg-zinc-950 text-white">
+<body class="bg-[#0a0a0a] text-white">
     
     <!-- Login Screen -->
-    <div id="loginScreen" class="min-h-screen flex items-center justify-center px-6">
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center px-6 bg-[#0a0a0a]">
         <div class="w-full max-w-sm">
             <div class="text-center mb-10">
-                <div class="mx-auto w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fa-solid fa-shield-halved text-white text-3xl"></i>
+                <div class="mx-auto w-20 h-20 bg-[#ef4444] rounded-[22px] flex items-center justify-center mb-6 skull-icon">
+                    <i class="fa-solid fa-skull text-white text-5xl"></i>
                 </div>
-                <h1 class="text-3xl font-bold">Admin Login</h1>
+                <h1 class="text-5xl font-black tracking-tighter">SKULL</h1>
+                <p class="text-[#ef4444] text-xl font-bold tracking-[3px] mt-1">CONTROL</p>
+                <p class="text-zinc-500 mt-3 text-sm">ABSOLUTE POWER • NO MERCY</p>
             </div>
 
-            <form id="loginForm" class="space-y-6">
-                <div>
-                    <label class="block text-sm text-zinc-400 mb-2">Email</label>
-                    <input type="email" id="email" class="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-lg" placeholder="admin@paynote.com" required>
-                </div>
-                <div>
-                    <label class="block text-sm text-zinc-400 mb-2">Password</label>
-                    <input type="password" id="password" class="w-full bg-zinc-900 border border-white/10 rounded-2xl px-5 py-4 text-lg" placeholder="••••••••" required>
-                </div>
-                <div id="error" class="text-red-400 text-sm hidden"></div>
-                <button type="submit" class="w-full bg-emerald-500 py-4 rounded-2xl font-semibold text-lg">Sign In</button>
-            </form>
+            <div class="danger-card rounded-3xl p-8">
+                <form id="loginForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">ADMIN EMAIL</label>
+                        <input type="email" id="email" class="w-full bg-[#1a1a1a] border border-[#3f1f1f] rounded-2xl px-5 py-4 text-lg focus:outline-none focus:border-[#ef4444]" placeholder="admin@paynote.com" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">PASSWORD</label>
+                        <input type="password" id="password" class="w-full bg-[#1a1a1a] border border-[#3f1f1f] rounded-2xl px-5 py-4 text-lg focus:outline-none focus:border-[#ef4444]" placeholder="••••••••" required>
+                    </div>
+                    
+                    <div id="error" class="text-[#ef4444] text-sm hidden"></div>
+                    
+                    <button type="submit" class="w-full bg-[#ef4444] hover:bg-[#dc2626] py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition-all active:scale-[0.985]">
+                        <span>ENTER THE VOID</span>
+                        <i class="fa-solid fa-skull"></i>
+                    </button>
+                </form>
+            </div>
+            
+            <p class="text-center text-[10px] text-zinc-500 mt-8 tracking-[1px]">AUTHORIZED PERSONNEL ONLY • 2026</p>
         </div>
     </div>
 
-    <!-- Dashboard Screen -->
+    <!-- Dashboard -->
     <div id="dashboardScreen" class="hidden">
-        <div class="max-w-5xl mx-auto px-6 py-8">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h1 class="text-3xl font-bold">Dashboard</h1>
-                    <p class="text-zinc-400">Welcome back, Admin</p>
+        <div class="max-w-5xl mx-auto px-5 pb-20">
+            
+            <!-- Header -->
+            <div class="flex items-center justify-between pt-6 pb-8">
+                <div class="flex items-center gap-4">
+                    <div class="w-11 h-11 bg-[#ef4444] rounded-2xl flex items-center justify-center">
+                        <i class="fa-solid fa-skull text-white text-3xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-black tracking-tighter">SKULL CONTROL</h1>
+                        <p class="text-[#ef4444] text-xs font-bold tracking-[2px]">ABSOLUTE AUTHORITY</p>
+                    </div>
                 </div>
-                <button onclick="logout()" class="px-5 py-2 bg-red-500/20 text-red-400 rounded-2xl text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-sign-out-alt"></i> Logout
+                
+                <button onclick="logout()" class="flex items-center gap-2 px-5 py-2.5 bg-[#1a1a1a] hover:bg-[#ef4444] hover:text-white text-[#ef4444] rounded-2xl text-sm font-semibold transition-all">
+                    <i class="fa-solid fa-power-off"></i>
+                    <span>EXIT</span>
                 </button>
             </div>
 
             <!-- Stats -->
             <div class="grid grid-cols-2 gap-4 mb-8">
-                <div class="bg-zinc-900 rounded-3xl p-6">
-                    <div class="text-zinc-400 text-sm">Total Users</div>
-                    <div id="totalUsers" class="text-4xl font-bold mt-2">—</div>
+                <div class="danger-card rounded-3xl p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-zinc-400 text-sm">TOTAL USERS</p>
+                            <div id="totalUsers" class="stat-value text-white mt-1">—</div>
+                        </div>
+                        <i class="fa-solid fa-users text-[#ef4444] text-3xl"></i>
+                    </div>
                 </div>
-                <div class="bg-zinc-900 rounded-3xl p-6">
-                    <div class="text-zinc-400 text-sm">Total Invoices</div>
-                    <div id="totalInvoices" class="text-4xl font-bold mt-2">—</div>
+                
+                <div class="danger-card rounded-3xl p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-zinc-400 text-sm">TOTAL INVOICES</p>
+                            <div id="totalInvoices" class="stat-value text-white mt-1">—</div>
+                        </div>
+                        <i class="fa-solid fa-file-invoice text-[#ef4444] text-3xl"></i>
+                    </div>
                 </div>
             </div>
 
             <!-- Tabs -->
-            <div class="flex gap-2 mb-6">
-                <button onclick="switchTab(0)" class="tab-btn px-6 py-2 bg-emerald-500 text-white rounded-2xl text-sm font-medium">Users</button>
-                <button onclick="switchTab(1)" class="tab-btn px-6 py-2 bg-zinc-800 text-white rounded-2xl text-sm font-medium">Invoices</button>
-                <button onclick="switchTab(2)" class="tab-btn px-6 py-2 bg-zinc-800 text-white rounded-2xl text-sm font-medium">Logs</button>
+            <div class="flex bg-[#1a1a1a] rounded-2xl p-1 mb-6">
+                <button onclick="switchTab(0)" class="nav-tab flex-1 py-3 text-sm font-bold rounded-[14px] active-tab" data-tab="0">USERS</button>
+                <button onclick="switchTab(1)" class="nav-tab flex-1 py-3 text-sm font-bold text-zinc-400 rounded-[14px]" data-tab="1">INVOICES</button>
+                <button onclick="switchTab(2)" class="nav-tab flex-1 py-3 text-sm font-bold text-zinc-400 rounded-[14px]" data-tab="2">LOGS</button>
             </div>
 
-            <div id="tabContent"></div>
+            <!-- Content -->
+            <div id="tabContent" class="min-h-[400px]"></div>
+            
         </div>
     </div>
 
     <script>
         let token = localStorage.getItem('adminToken') || '';
 
-        // Auto login if token exists
+        // Auto login
         if (token) {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('dashboardScreen').classList.remove('hidden');
@@ -102,11 +203,11 @@
                     document.getElementById('dashboardScreen').classList.remove('hidden');
                     loadDashboard();
                 } else {
-                    errorDiv.textContent = data.error || 'Login failed';
+                    errorDiv.textContent = data.error || 'ACCESS DENIED';
                     errorDiv.classList.remove('hidden');
                 }
             } catch (err) {
-                errorDiv.textContent = 'Connection failed';
+                errorDiv.textContent = 'CONNECTION FAILED';
                 errorDiv.classList.remove('hidden');
             }
         });
@@ -121,20 +222,23 @@
                 document.getElementById('totalUsers').textContent = data.stats?.totalUsers || 0;
                 document.getElementById('totalInvoices').textContent = data.stats?.totalInvoices || 0;
 
-                switchTab(0); // Load Users by default
-            } catch (err) {
-                alert('Failed to load dashboard');
-            }
+                switchTab(0);
+            } catch (err) {}
         }
 
         function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
-                btn.classList.toggle('bg-emerald-500', i === tab);
-                btn.classList.toggle('bg-zinc-800', i !== tab);
+            document.querySelectorAll('.nav-tab').forEach((btn, i) => {
+                if (i === tab) {
+                    btn.classList.add('bg-[#ef4444]', 'text-white');
+                    btn.classList.remove('text-zinc-400');
+                } else {
+                    btn.classList.remove('bg-[#ef4444]', 'text-white');
+                    btn.classList.add('text-zinc-400');
+                }
             });
 
             const content = document.getElementById('tabContent');
-            content.innerHTML = `<div class="text-center py-8">Loading...</div>`;
+            content.innerHTML = `<div class="flex justify-center py-12"><i class="fa-solid fa-skull fa-spin text-[#ef4444] text-4xl"></i></div>`;
 
             if (tab === 0) loadUsers();
             else if (tab === 1) loadInvoices();
@@ -152,21 +256,22 @@
                 let html = `<div class="space-y-3">`;
                 users.forEach(user => {
                     html += `
-                        <div class="bg-zinc-900 p-4 rounded-2xl flex justify-between items-center">
-                            <div>
-                                <div class="font-semibold">${user.name}</div>
-                                <div class="text-sm text-zinc-400">${user.email}</div>
+                        <div class="danger-card p-5 rounded-3xl flex justify-between items-center">
+                            <div class="flex-1 min-w-0 pr-4">
+                                <div class="data-text font-semibold truncate">${user.name}</div>
+                                <div class="data-text text-zinc-400 truncate">${user.email}</div>
                             </div>
-                            <div class="flex gap-2">
-                                <button onclick="deleteUser('${user.id}')" class="px-4 py-1.5 bg-red-500/20 text-red-400 text-sm rounded-xl">Delete</button>
-                            </div>
+                            <button onclick="deleteUser('${user.id}', '${user.name}')" 
+                                    class="danger-btn px-5 py-2 bg-[#3f1f1f] text-[#ef4444] text-sm font-bold rounded-2xl whitespace-nowrap">
+                                DELETE
+                            </button>
                         </div>
                     `;
                 });
                 html += `</div>`;
                 content.innerHTML = html;
             } catch (err) {
-                content.innerHTML = `<div class="text-red-400">Failed to load users</div>`;
+                content.innerHTML = `<div class="text-center py-12 text-[#ef4444]">FAILED TO LOAD USERS</div>`;
             }
         }
 
@@ -181,14 +286,22 @@
                 let html = `<div class="space-y-3">`;
                 invoices.forEach(inv => {
                     html += `
-                        <div class="bg-zinc-900 p-4 rounded-2xl">
-                            <div class="flex justify-between">
-                                <div>${inv.customer_name}</div>
-                                <div class="font-bold">₦${inv.total_amount}</div>
+                        <div class="danger-card p-5 rounded-3xl">
+                            <div class="flex justify-between items-start gap-4">
+                                <div class="flex-1 min-w-0">
+                                    <div class="data-text font-semibold truncate">${inv.customer_name}</div>
+                                    <div class="data-text text-zinc-400 text-sm truncate">${inv.customer_email}</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold">₦${inv.total_amount}</div>
+                                </div>
                             </div>
-                            <div class="flex justify-between mt-3">
-                                <span class="text-sm px-3 py-1 rounded-full ${inv.status === 'paid' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${inv.status}</span>
-                                <button onclick="markPaid('${inv.id}')" class="px-4 py-1.5 bg-emerald-500/20 text-emerald-400 text-sm rounded-xl">Mark Paid</button>
+                            
+                            <div class="mt-4 flex justify-between items-center">
+                                <span class="px-3 py-1 text-xs rounded-full ${inv.status === 'paid' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-[#ef4444]/20 text-[#ef4444]'}">
+                                    ${inv.status.toUpperCase()}
+                                </span>
+                                <button onclick="markInvoicePaid('${inv.id}')" class="px-4 py-2 text-sm bg-emerald-500/10 text-emerald-400 rounded-2xl font-medium">MARK PAID</button>
                             </div>
                         </div>
                     `;
@@ -196,7 +309,7 @@
                 html += `</div>`;
                 content.innerHTML = html;
             } catch (err) {
-                content.innerHTML = `<div class="text-red-400">Failed to load invoices</div>`;
+                content.innerHTML = `<div class="text-center py-12 text-[#ef4444]">FAILED TO LOAD INVOICES</div>`;
             }
         }
 
@@ -209,43 +322,57 @@
                 const logs = await res.json();
 
                 let html = `<div class="space-y-2">`;
-                logs.slice(0, 20).forEach(log => {
-                    html += `<div class="bg-zinc-900 p-3 rounded-2xl text-sm">${log.action} - ${new Date(log.timestamp).toLocaleString()}</div>`;
+                logs.slice(0, 25).forEach(log => {
+                    html += `
+                        <div class="danger-card px-5 py-3 rounded-2xl text-sm flex justify-between">
+                            <div class="font-medium">${log.action}</div>
+                            <div class="text-zinc-400 text-xs">${new Date(log.timestamp).toLocaleTimeString()}</div>
+                        </div>
+                    `;
                 });
                 html += `</div>`;
                 content.innerHTML = html;
             } catch (err) {
-                content.innerHTML = `<div class="text-red-400">Failed to load logs</div>`;
+                content.innerHTML = `<div class="text-center py-12 text-[#ef4444]">FAILED TO LOAD LOGS</div>`;
             }
         }
 
-       async function deleteUser(id) {
-    if (!confirm('Delete this user permanently?')) return;
+        async function deleteUser(id, name) {
+            if (!confirm(`PERMANENTLY DELETE "${name}"?`)) return;
 
-    try {
-        const res = await fetch(`https://paynote2.onrender.com/admin/user/${id}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
+            try {
+                const res = await fetch(`https://paynote2.onrender.com/admin/user/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
 
-        if (res.ok) {
-            alert('User deleted successfully');
-            switchTab(0); // Refresh the users list
-        } else {
-            const errorData = await res.json();
-            alert('Failed to delete: ' + (errorData.error || 'Unknown error'));
+                if (res.ok) {
+                    alert('USER TERMINATED');
+                    switchTab(0);
+                } else {
+                    alert('FAILED TO TERMINATE');
+                }
+            } catch (err) {
+                alert('ERROR TERMINATING USER');
+            }
         }
-    } catch (error) {
-        alert('Error deleting user: ' + error.message);
-    }
-}
 
-        async function markPaid(id) {
-            await fetch(`https://paynote2.onrender.com/admin/invoice/${id}/mark-paid`, {
-                method: 'PUT',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            switchTab(1);
+        async function markInvoicePaid(id) {
+            try {
+                const res = await fetch(`https://paynote2.onrender.com/admin/invoice/${id}/mark-paid`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (res.ok) {
+                    alert('INVOICE MARKED PAID');
+                    switchTab(1);
+                } else {
+                    alert('FAILED TO UPDATE');
+                }
+            } catch (err) {
+                alert('ERROR');
+            }
         }
 
         function logout() {
