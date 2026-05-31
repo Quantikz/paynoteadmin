@@ -219,14 +219,26 @@
             }
         }
 
-        async function deleteUser(id) {
-            if (!confirm('Delete this user?')) return;
-            await fetch(`https://paynote2.onrender.com/admin/user/${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            switchTab(0);
+       async function deleteUser(id) {
+    if (!confirm('Delete this user permanently?')) return;
+
+    try {
+        const res = await fetch(`https://paynote2.onrender.com/admin/user/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (res.ok) {
+            alert('User deleted successfully');
+            switchTab(0); // Refresh the users list
+        } else {
+            const errorData = await res.json();
+            alert('Failed to delete: ' + (errorData.error || 'Unknown error'));
         }
+    } catch (error) {
+        alert('Error deleting user: ' + error.message);
+    }
+}
 
         async function markPaid(id) {
             await fetch(`https://paynote2.onrender.com/admin/invoice/${id}/mark-paid`, {
