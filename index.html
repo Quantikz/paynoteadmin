@@ -8,9 +8,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Skull Command">
     
-    <title>Paynote • Skull Command</title>
+    <title>Skull Command • Admin</title>
     
-    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiU2t1bGwgQ29tbWFuZCIsInNob3J0X25hbWUiOiJTa3VsbCBDb21tYW5kIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwYTBhMGEiLCJ0aGVtZV9jb2xvciI6IiNlZjQ0NDQiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvNTk2OC81OTY4ODg1LnBuZyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifV19">
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiU2t1bGwgQ29tbWFuZCIsInNob3J0X25hbWUiOiJTa3VsbCBDb21tYW5kIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwYTBhMGEiLCJ0aGVtZV9jb2xvciI6IiNlZjQ0NDQiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvNTk2OC81OTY4ODg1LnBuZyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifSx7InNyYyI6Imh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzU5NjgvNTk2ODg4NS5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -142,14 +143,6 @@
                 navigator.serviceWorker.register('/sw.js').catch(() => {});
             });
         }
-
-        // PWA Install Prompt
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            // You can show a custom install button if you want
-        });
 
         let token = localStorage.getItem('adminToken') || '';
         let allUsers = [];
@@ -359,7 +352,7 @@
             }
         }
 
-        // ==================== USER DETAIL PAGE ====================
+        // User Detail Page
         async function showUserDetail(userId) {
             const user = allUsers.find(u => u.id === userId);
             if (!user) return;
