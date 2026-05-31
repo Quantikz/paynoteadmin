@@ -266,20 +266,27 @@
             content.innerHTML = html;
         }
 
-        function switchTab(tab) {
-            document.querySelectorAll('.nav-tab').forEach((btn, i) => {
-                btn.classList.toggle('bg-[#ef4444]', i === tab);
-                btn.classList.toggle('text-white', i === tab);
-                btn.classList.toggle('text-zinc-400', i !== tab);
-            });
+     function switchTab(tab) {
+    // Remove active class from ALL buttons first
+    document.querySelectorAll('.nav-tab').forEach(btn => {
+        btn.classList.remove('bg-[#ef4444]', 'text-white');
+        btn.classList.add('text-zinc-400');
+    });
 
-            const content = document.getElementById('tabContent');
-            content.innerHTML = `<div class="flex justify-center py-12"><i class="fa-solid fa-skull fa-spin text-[#ef4444] text-4xl"></i></div>`;
+    // Add active class to the correct button
+    const activeBtn = document.querySelector(`.nav-tab[data-tab="${tab}"]`);
+    if (activeBtn) {
+        activeBtn.classList.add('bg-[#ef4444]', 'text-white');
+        activeBtn.classList.remove('text-zinc-400');
+    }
 
-            if (tab === 0) loadUsers();
-            else if (tab === 1) loadInvoices();
-            else if (tab === 2) loadLogs();
-        }
+    const content = document.getElementById('tabContent');
+    content.innerHTML = `<div class="flex justify-center py-12"><i class="fa-solid fa-skull fa-spin text-[#ef4444] text-4xl"></i></div>`;
+
+    if (tab === 0) loadUsers();
+    else if (tab === 1) loadInvoices();
+    else if (tab === 2) loadLogs();
+}
 
         async function loadUsers() {
             const content = document.getElementById('tabContent');
